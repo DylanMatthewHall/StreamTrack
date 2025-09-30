@@ -11,7 +11,7 @@
 **Goal:** Provide users with a simple, transparent way to evaluate the value of their subscriptions through clear reporting and recommendations.  
 
 
-## Phase 1 requirements MVP
+## Requirements MVP
 
 **Functional Requirements:** 
 1. The system must allow user to **add a service** with a monthly cost.
@@ -26,3 +26,5 @@
 **Non Functional Requirements**
 1. **Usuability:** Provide a simple text menu for adding services, logging sessions, and generating reports
 2. **Accuracy:** Handle edge cases such as zero hours watched as (N/A) and place these at top of list in an identifying manner.
+
+
