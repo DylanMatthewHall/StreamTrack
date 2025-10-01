@@ -1,8 +1,12 @@
 # Maven build output
 /target/
+!.mvn/wrapper/maven-wrapper.jar
 
 # Logs
 *.log
+
+# Compiled class files
+*.class
 
 # OS-specific files
 .DS_Store
@@ -11,9 +15,21 @@ Thumbs.db
 # VS Code
 .vscode/
 
-# IntelliJ / Eclipse
+# IntelliJ IDEA
 .idea/
 *.iml
+
+# Eclipse
 .classpath
 .project
 .settings/
+
+# Test reports
+/surefire-reports/
+
+# Temp & backup files
+*~
+*.swp
+
+# Environment files
+.env
