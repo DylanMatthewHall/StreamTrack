@@ -3,6 +3,7 @@ package com.dylan;
 import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.beans.JavaBean;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -18,6 +19,7 @@ public class Application {
 
     // Core Methods
     public static void main(String[] args) {
+        welcomeBanner();
         Application app = new Application();
         app.run();
 
@@ -43,12 +45,13 @@ public class Application {
     }
 
     private void showMenu() {
-        System.out.println("\n1. Add Service");
+        System.out.println("\n=== StreamTrack Menu ===");
+        System.out.println("1. Add Service");
         System.out.println("2. Log Service Session");
         System.out.println("3. Generate Report");
         System.out.println("4. List Services");
         System.out.println("5. Exit");
-        System.out.print("Please Select An Option Via Number: ");
+        System.out.print("Please select an option by its number: ");
     }
 
     private int handleInput() {
@@ -59,15 +62,15 @@ public class Application {
 
     // user actions
     private void addService() {
-        System.out.println("Type the Name of the Service Please");
+        System.out.println("\nType the name of the service you want to add.");
         String serviceName = scanner.nextLine();
 
-        System.out.println("Type the monthly rate for the service");
+        System.out.println("\nType the monthly rate of the service");
         double serviceRate = scanner.nextDouble();
         scanner.nextLine();
 
         services.add(new StreamingService(serviceName, serviceRate));
-        System.out.println(serviceName + " added successfully!");
+        System.out.println("\n" + serviceName + " added successfully!");
     }
 
     private void logSession() {
@@ -78,7 +81,7 @@ public class Application {
         }
 
         // Select Service
-        System.out.print("Select a service by number: ");
+        System.out.print("Select a service by its number: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
 
@@ -90,7 +93,7 @@ public class Application {
         StreamingService selectedService = services.get(choice - 1);
 
         // Get Date
-        System.out.print("Enter the date (YYYY-MM-DD): ");
+        System.out.print("\nEnter the date (YYYY-MM-DD): ");
         String dateInput = scanner.nextLine();
 
         LocalDate date;
@@ -102,7 +105,7 @@ public class Application {
         }
 
         // How many minutes
-        System.out.print("Enter how many minutes you watched: ");
+        System.out.print("\nEnter how many minutes you watched: ");
         int minutes = scanner.nextInt();
         scanner.nextLine();
 
@@ -110,12 +113,12 @@ public class Application {
         ViewingSession session = new ViewingSession(date, minutes);
         selectedService.addSession(session);
 
-        System.out.println("Logged " + minutes + " minutes on " + date + " for " + selectedService.getName());
+        System.out.println("\nLogged " + minutes + " minutes on " + date + " for " + selectedService.getName());
     }
 
     private void generateReport() {
         if (services.isEmpty()) {
-            System.out.println("No services available. Please add a service first");
+            System.out.println("\nNo services available. Please add a service first");
             return;
         }
 
@@ -124,14 +127,29 @@ public class Application {
 
     private void listServices() {
         if (services.isEmpty()) {
-            System.out.println("No services added");
+            System.out.println("\nNo services added");
             System.out.println("Select option 'Add Service' to add a service");
             return;
         }
+
+        System.out.println("\nListed Services:");
         int num = 1;
         for (StreamingService service : services) {
             System.out.println(num + ". " + service.getName());
             num++;
         }
+    }
+
+    private static void welcomeBanner() {
+        String banner = """
+                      _____ _                         _______             _
+                     / ____| |                       |__   __|           | |
+                    | (___ | |_ _ __ ___  __ _ _ __ ___ | |_ __ __ _  ___| | __
+                     \\___ \\| __| '__/ _ \\/ _` | '_ ` _ \\| | '__/ _` |/ __| |/ /
+                     ____) | |_| | |  __/ (_| | | | | | | | | | (_| | (__|   <
+                    |_____/ \\__|_|  \\___|\\__,_|_| |_| |_|_|_|  \\__,_|\\___|_|\\_\\
+                """;
+
+        System.out.println(banner);
     }
 }

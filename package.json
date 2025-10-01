@@ -1,0 +1,24 @@
+{
+  "name": "streamtrack",
+  "version": "1.0.0",
+  "description": "**Problem:** With multiple streaming and subscription services, it is difficult for users to track actual usage and determine the true value of their memberships.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DylanMatthewHall/StreamTrack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/DylanMatthewHall/StreamTrack/issues"
+  },
+  "homepage": "https://github.com/DylanMatthewHall/StreamTrack#readme",
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}
