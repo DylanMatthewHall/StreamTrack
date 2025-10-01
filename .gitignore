@@ -1,5 +1,6 @@
 # Maven build output
-/target/
+/streamtrack/target/
+target/
 !.mvn/wrapper/maven-wrapper.jar
 
 # Logs
