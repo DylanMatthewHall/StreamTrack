@@ -2,8 +2,9 @@ package com.dylan;
 
 import java.util.List;
 import java.util.Scanner;
-import java.security.Provider.Service;
 import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 public class Application {
     private List<StreamingService> services;
@@ -70,11 +71,55 @@ public class Application {
     }
 
     private void logSession() {
+        // List Services
+        listServices();
+        if (services.isEmpty()) {
+            return;
+        }
 
+        // Select Service
+        System.out.print("Select a service by number: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choice < 1 || choice >= services.size() + 1) {
+            System.out.println("Invalid choice.");
+            return;
+        }
+
+        StreamingService selectedService = services.get(choice - 1);
+
+        // Get Date
+        System.out.print("Enter the date (YYYY-MM-DD): ");
+        String dateInput = scanner.nextLine();
+
+        LocalDate date;
+        try {
+            date = LocalDate.parse(dateInput);
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+            return;
+        }
+
+        // How many minutes
+        System.out.print("Enter how many minutes you watched: ");
+        int minutes = scanner.nextInt();
+        scanner.nextLine();
+
+        // Create the session with date and minutes
+        ViewingSession session = new ViewingSession(date, minutes);
+        selectedService.addSession(session);
+
+        System.out.println("Logged " + minutes + " minutes on " + date + " for " + selectedService.getName());
     }
 
     private void generateReport() {
+        if (services.isEmpty()) {
+            System.out.println("No services available. Please add a service first");
+            return;
+        }
 
+        Report.generateSummary(services);
     }
 
     private void listServices() {
@@ -83,9 +128,10 @@ public class Application {
             System.out.println("Select option 'Add Service' to add a service");
             return;
         }
-
-        for (StreamingService Service : services) {
-            System.out.println(Service.getName());
+        int num = 1;
+        for (StreamingService service : services) {
+            System.out.println(num + ". " + service.getName());
+            num++;
         }
     }
 }
