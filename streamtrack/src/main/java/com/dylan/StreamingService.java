@@ -3,49 +3,59 @@ package com.dylan;
 import java.util.List;
 import java.util.ArrayList;
 
-public class StreamingService {
+public class StreamingService
+{
     private String name;
     private double monthlyCost;
     private List<ViewingSession> sessions;
 
     // Constructor
-    public StreamingService(String name, double monthlyCost) {
+    public StreamingService(String name, double monthlyCost)
+    {
         this.name = name;
         this.monthlyCost = monthlyCost;
         this.sessions = new ArrayList<>();
     }
 
     // Methods
-    public String getName() {
+    public String getName()
+    {
         return this.name;
     }
 
-    public double getTotalHours() {
+    public double getTotalHours()
+    {
         double hours = 0.0;
-        for (ViewingSession session : sessions) {
+        for (ViewingSession session : sessions)
+        {
             hours += session.getHours();
         }
         return hours;
     }
 
-    public double getCostPerHour() {
+    public double getCostPerHour()
+    {
         double hours = this.getTotalHours();
-        if (hours == 0) {
+        if (hours == 0)
+        {
             return 0.0;
         }
         return monthlyCost / hours;
     }
 
-    public void addSession(ViewingSession session) {
+    public void addSession(ViewingSession session)
+    {
         this.sessions.add(session);
     }
 
-    public double getMonthlyCost() {
+    public double getMonthlyCost()
+    {
         return this.monthlyCost;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return name + " ($" + monthlyCost + "/month, " + String.format("%.2f", getTotalHours()) + " hrs watched)";
     }
 }

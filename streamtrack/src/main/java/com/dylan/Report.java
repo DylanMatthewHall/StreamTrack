@@ -2,10 +2,13 @@ package com.dylan;
 
 import java.util.List;
 
-public class Report {
-    public static void generateSummary(List<StreamingService> services) {
+public class Report
+{
+    public static void generateSummary(List<StreamingService> services)
+    {
         System.out.println();
-        for (StreamingService service : services) {
+        for (StreamingService service : services)
+        {
             double totalHours = service.getTotalHours();
             double costPerHour = service.getCostPerHour();
 

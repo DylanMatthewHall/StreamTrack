@@ -1,24 +1,28 @@
 package com.dylan;
 
-import java.util.List;
-import java.util.Scanner;
-import java.util.ArrayList;
 import java.beans.JavaBean;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-public class Application {
+public class Application
+{
+
     private List<StreamingService> services;
     private Scanner scanner;
 
     // Constructor
-    public Application() {
+    public Application()
+    {
         this.services = new ArrayList<>();
         this.scanner = new Scanner(System.in);
     }
 
     // Core Methods
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         welcomeBanner();
         Application app = new Application();
         app.run();
@@ -27,13 +31,16 @@ public class Application {
         System.out.println("Thankyou for using my application, Goodbye.");
     }
 
-    public void run() {
+    public void run()
+    {
         boolean running = true;
-        while (running) {
+        while (running)
+        {
             showMenu();
             int choice = handleInput();
 
-            switch (choice) {
+            switch (choice)
+            {
                 case 1 -> addService();
                 case 2 -> logSession();
                 case 3 -> generateReport();
@@ -44,7 +51,8 @@ public class Application {
         }
     }
 
-    private void showMenu() {
+    private void showMenu()
+    {
         System.out.println("\n=== StreamTrack Menu ===");
         System.out.println("1. Add Service");
         System.out.println("2. Log Service Session");
@@ -54,14 +62,16 @@ public class Application {
         System.out.print("Please select an option by its number: ");
     }
 
-    private int handleInput() {
+    private int handleInput()
+    {
         int userInput = scanner.nextInt(); // get user input
         scanner.nextLine(); // consume leftover newline
         return userInput;
     }
 
     // user actions
-    private void addService() {
+    private void addService()
+    {
         System.out.println("\nType the name of the service you want to add.");
         String serviceName = scanner.nextLine();
 
@@ -73,10 +83,12 @@ public class Application {
         System.out.println("\n" + serviceName + " added successfully!");
     }
 
-    private void logSession() {
+    private void logSession()
+    {
         // List Services
         listServices();
-        if (services.isEmpty()) {
+        if (services.isEmpty())
+        {
             return;
         }
 
@@ -85,7 +97,8 @@ public class Application {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        if (choice < 1 || choice >= services.size() + 1) {
+        if (choice < 1 || choice >= services.size() + 1)
+        {
             System.out.println("Invalid choice.");
             return;
         }
@@ -97,9 +110,11 @@ public class Application {
         String dateInput = scanner.nextLine();
 
         LocalDate date;
-        try {
+        try
+        {
             date = LocalDate.parse(dateInput);
-        } catch (DateTimeParseException e) {
+        } catch (DateTimeParseException e)
+        {
             System.out.println("Invalid date format. Please use YYYY-MM-DD.");
             return;
         }
@@ -116,8 +131,10 @@ public class Application {
         System.out.println("\nLogged " + minutes + " minutes on " + date + " for " + selectedService.getName());
     }
 
-    private void generateReport() {
-        if (services.isEmpty()) {
+    private void generateReport()
+    {
+        if (services.isEmpty())
+        {
             System.out.println("\nNo services available. Please add a service first");
             return;
         }
@@ -125,8 +142,10 @@ public class Application {
         Report.generateSummary(services);
     }
 
-    private void listServices() {
-        if (services.isEmpty()) {
+    private void listServices()
+    {
+        if (services.isEmpty())
+        {
             System.out.println("\nNo services added");
             System.out.println("Select option 'Add Service' to add a service");
             return;
@@ -134,13 +153,15 @@ public class Application {
 
         System.out.println("\nListed Services:");
         int num = 1;
-        for (StreamingService service : services) {
+        for (StreamingService service : services)
+        {
             System.out.println(num + ". " + service.getName());
             num++;
         }
     }
 
-    private static void welcomeBanner() {
+    private static void welcomeBanner()
+    {
         String banner = """
                       _____ _                         _______             _
                      / ____| |                       |__   __|           | |

@@ -2,30 +2,36 @@ package com.dylan;
 
 import java.time.LocalDate;
 
-public class ViewingSession {
+public class ViewingSession
+{
     private LocalDate date;
     private int durationMinutes;
 
     // constructor
-    public ViewingSession(LocalDate date, int durationMinutes) {
+    public ViewingSession(LocalDate date, int durationMinutes)
+    {
         this.date = date;
         this.durationMinutes = durationMinutes;
     }
 
-    public LocalDate getDate() {
+    public LocalDate getDate()
+    {
         return this.date;
     }
 
-    public double getHours() {
+    public double getHours()
+    {
         return this.durationMinutes / 60.0;
     }
 
-    public int getDurationMinutes() {
+    public int getDurationMinutes()
+    {
         return this.durationMinutes;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return date + " - " + durationMinutes + " minutes (" + String.format("%.2f", getHours()) + " hrs)";
     }
 }
