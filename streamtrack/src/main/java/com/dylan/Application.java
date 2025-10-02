@@ -80,7 +80,7 @@ public class Application
     }
 
     // user actions
-    private void addService()
+    public void addService()
     {
         String serviceName = null;
         while (serviceName == null)
@@ -126,7 +126,7 @@ public class Application
         System.out.println("\n" + serviceName + " at " + serviceRate + " added successfully!");
     }
 
-    private void removeService()
+    public void removeService()
     {
         String promptMessage = "Select a service to remove: ";
         boolean allowCancel = true;
@@ -135,7 +135,7 @@ public class Application
         this.services.remove(service);
     }
 
-    private void logSession()
+    public void logSession()
     {
         // Select Service
         String promptMessage = "Select a service to log a session to.";
@@ -182,7 +182,7 @@ public class Application
         System.out.println("\nLogged " + minutes + " minutes on " + date + " for " + service.getName());
     }
 
-    private void unlogSession()
+    public void unlogSession()
     {
         String promptMessage = "Select a service to remove a logged session from.";
         boolean allowCancel = true;
@@ -192,7 +192,7 @@ public class Application
         service.removeSession(scanner);
     }
 
-    private void generateReport()
+    public void generateReport()
     {
         if (services.isEmpty())
         {
@@ -203,7 +203,7 @@ public class Application
         Report.generateSummary(services);
     }
 
-    private void listServices()
+    public void listServices()
     {
         if (services.isEmpty())
         {
@@ -235,7 +235,7 @@ public class Application
         System.out.println(banner);
     }
 
-    private boolean serviceExists(String serviceName)
+    public boolean serviceExists(String serviceName)
     {
         for (StreamingService service : services)
         {
@@ -247,7 +247,7 @@ public class Application
         return false;
     }
 
-    private StreamingService selectService(String promptMessage, boolean allowCancel)
+    public StreamingService selectService(String promptMessage, boolean allowCancel)
     {
         if (this.services.isEmpty())
         {
