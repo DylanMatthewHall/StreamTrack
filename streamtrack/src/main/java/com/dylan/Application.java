@@ -1,6 +1,5 @@
 package com.dylan;
 
-import java.beans.JavaBean;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -31,21 +30,23 @@ public class Application
         System.out.println("Thankyou for using my application, Goodbye.");
     }
 
-    public void run()
+    private void run()
     {
         boolean running = true;
         while (running)
         {
             showMenu();
-            int choice = handleInput();
 
+            int choice = handleInput();
             switch (choice)
             {
                 case 1 -> addService();
-                case 2 -> logSession();
-                case 3 -> generateReport();
-                case 4 -> listServices();
-                case 5 -> running = false;
+                case 2 -> removeService();
+                case 3 -> logSession();
+                case 4 -> unlogSession();
+                case 5 -> generateReport();
+                case 6 -> listServices();
+                case 7 -> running = false;
                 default -> System.out.println("Invalid option.");
             }
         }
@@ -64,23 +65,62 @@ public class Application
 
     private int handleInput()
     {
-        int userInput = scanner.nextInt(); // get user input
-        scanner.nextLine(); // consume leftover newline
+        int userInput = 0;
+        try
+        {
+            userInput = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e)
+        {
+            System.out.println("Please enter a valid input option. (e.g. 1)");
+            userInput = 0;
+        }
         return userInput;
     }
 
     // user actions
     private void addService()
     {
-        System.out.println("\nType the name of the service you want to add.");
-        String serviceName = scanner.nextLine();
+        String serviceName = "";
+        while (true)
+        {
+            System.out.print("\nType the Name of the Service Please: ");
+            serviceName = scanner.nextLine().trim();
 
-        System.out.println("\nType the monthly rate of the service");
-        double serviceRate = scanner.nextDouble();
-        scanner.nextLine();
+            if (serviceName.isEmpty())
+            {
+                System.out.println("Service Name cannot be empty.");
+            } else if (serviceExists(serviceName))
+            {
+                System.out.println("Service Name already exists. Please use a different name.");
+            } else
+            {
+                break;
+            }
+        }
 
+        double serviceRate = 0.0;
+        boolean valid = false;
+
+        while (!valid)
+        {
+            System.out.print("\nType the monthly rate of the service: ");
+
+            try
+            {
+                serviceRate = Double.parseDouble(scanner.nextLine().trim());
+                valid = true;
+            } catch (NumberFormatException e)
+            {
+                System.out.println("Invalid input. Please enter a valid number (e.g., 12.99)");
+            }
+        }
         services.add(new StreamingService(serviceName, serviceRate));
-        System.out.println("\n" + serviceName + " added successfully!");
+        System.out.println("\n" + serviceName + " at " + serviceRate + " added successfully!");
+    }
+
+    private void removeService()
+    {
+        // TODO: write method to remove service
     }
 
     private void logSession()
@@ -92,43 +132,72 @@ public class Application
             return;
         }
 
-        // Select Service
-        System.out.print("Select a service by its number: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        if (choice < 1 || choice >= services.size() + 1)
+        boolean valid = false;
+        int userChoice = -1;
+        while (!valid)
         {
-            System.out.println("Invalid choice.");
-            return;
+            System.out.print("\nSelect a serice by its number: ");
+
+            try
+            {
+                userChoice = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e)
+            {
+                System.out.println("Invalid input. Please enter a valid number (e.g., 12.99)");
+            }
+
+            if (userChoice >= 1 && userChoice <= services.size())
+            {
+                valid = true;
+            }
         }
 
-        StreamingService selectedService = services.get(choice - 1);
+        // Select Service
+        StreamingService selectedService = services.get(userChoice - 1);
 
         // Get Date
-        System.out.print("\nEnter the date (YYYY-MM-DD): ");
-        String dateInput = scanner.nextLine();
-
-        LocalDate date;
-        try
+        LocalDate date = null;
+        valid = false;
+        while (!valid)
         {
-            date = LocalDate.parse(dateInput);
-        } catch (DateTimeParseException e)
-        {
-            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
-            return;
+            System.out.print("\nEnter the date (YYYY-MM-DD): ");
+            String dateInput = scanner.nextLine();
+            try
+            {
+                date = LocalDate.parse(dateInput);
+                valid = true;
+            } catch (DateTimeParseException e)
+            {
+                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+            }
         }
 
         // How many minutes
-        System.out.print("\nEnter how many minutes you watched: ");
-        int minutes = scanner.nextInt();
-        scanner.nextLine();
+        int minutes = 0;
+        valid = false;
+        while (!valid)
+        {
+            System.out.print("\nEnter how many Minutes you watched: ");
+            try
+            {
+                minutes = Integer.parseInt(scanner.nextLine());
+                valid = true;
+            } catch (NumberFormatException e)
+            {
+                System.out.println("Enter a whole number please.");
+            }
+        }
 
         // Create the session with date and minutes
         ViewingSession session = new ViewingSession(date, minutes);
         selectedService.addSession(session);
 
         System.out.println("\nLogged " + minutes + " minutes on " + date + " for " + selectedService.getName());
+    }
+
+    private void unlogSession()
+    {
+        // TODO: write a way to remove logged session
     }
 
     private void generateReport()
@@ -172,5 +241,17 @@ public class Application
                 """;
 
         System.out.println(banner);
+    }
+
+    private boolean serviceExists(String serviceName)
+    {
+        for (StreamingService service : services)
+        {
+            if (service.getName().toLowerCase().equals(serviceName.toLowerCase()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
