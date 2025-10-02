@@ -122,7 +122,7 @@ public class Application
                 System.out.println("Invalid input. Please enter a valid number (e.g., 12.99)");
             }
         }
-        services.add(new StreamingService(serviceName, serviceRate));
+        this.services.add(new StreamingService(serviceName, serviceRate));
         System.out.println("\n" + serviceName + " at " + serviceRate + " added successfully!");
     }
 
@@ -132,7 +132,7 @@ public class Application
         boolean allowCancel = true;
         StreamingService service = selectService(promptMessage, allowCancel);
 
-        services.remove(service);
+        this.services.remove(service);
     }
 
     private void logSession()
@@ -249,7 +249,7 @@ public class Application
 
     private StreamingService selectService(String promptMessage, boolean allowCancel)
     {
-        if (services.isEmpty())
+        if (this.services.isEmpty())
         {
             System.out.println("\nNo services added");
             System.out.println("Select option 'Add Service' to add a service");
@@ -275,13 +275,13 @@ public class Application
                     return null;
                 }
 
-                service = services.get(choice - 1);
+                service = this.services.get(choice - 1);
             } catch (NumberFormatException e)
             {
                 System.out.println("Invalid input. Please enter a whole number.");
             } catch (IndexOutOfBoundsException e)
             {
-                System.out.println("Invalid choice. Please pick a number between 1 and " + services.size());
+                System.out.println("Invalid choice. Please pick a number between 1 and " + this.services.size() + ".");
             }
         }
         return service;

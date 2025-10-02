@@ -56,24 +56,11 @@ public class StreamingService implements Comparable<StreamingService>
 
     public void removeSession(Scanner scanner)
     {
-        if (sessions.isEmpty())
-        {
-            System.out.println("No sessions logged for " + name);
-            return;
-        }
+        String promptMessage = "Select a Session to remove.";
+        boolean allowCancel = true;
+        ViewingSession session = selectSession(promptMessage, allowCancel, scanner);
 
-        listSessions();
-
-        System.out.print("Select a session to remove: ");
-        try
-        {
-            int choice = Integer.parseInt(scanner.nextLine().trim());
-            ViewingSession removed = sessions.remove(choice - 1);
-            System.out.println("Removed: " + removed.getDate() + " - " + removed.getDurationMinutes() + " minutes");
-        } catch (Exception e)
-        {
-            System.out.println("Invalid choice. No session removed.");
-        }
+        this.sessions.remove(session);
     }
 
     private void listSessions()
@@ -89,6 +76,46 @@ public class StreamingService implements Comparable<StreamingService>
             System.out.println(num + ". " + session.toString());
             num++;
         }
+    }
+
+    private ViewingSession selectSession(String promptMessage, boolean allowCancel, Scanner scanner)
+    {
+        if (this.sessions.isEmpty())
+        {
+            System.out.println("\nNo sessions added");
+            System.out.println("Select option 'Log Session' to add a service");
+            return null;
+        }
+
+        listSessions();
+
+        ViewingSession session = null;
+
+        while (session == null)
+        {
+            System.out.print("\n" + promptMessage + (allowCancel ? " (0 to cancel): " : ": "));
+
+            String input = scanner.nextLine().trim();
+            try
+            {
+                int choice = Integer.parseInt(input);
+
+                if (allowCancel && choice == 0)
+                {
+                    System.out.println("Action canceled.");
+                    return null;
+                }
+
+                session = this.sessions.get(choice - 1);
+            } catch (NumberFormatException e)
+            {
+                System.out.println("Invalid input. Please enter a whole number.");
+            } catch (IndexOutOfBoundsException e)
+            {
+                System.out.println("Invalid choice. Please pick a number between 1 and " + this.sessions.size() + ".");
+            }
+        }
+        return session;
     }
 
     @Override
