@@ -56,10 +56,12 @@ public class Application
     {
         System.out.println("\n=== StreamTrack Menu ===");
         System.out.println("1. Add Service");
-        System.out.println("2. Log Service Session");
-        System.out.println("3. Generate Report");
-        System.out.println("4. List Services");
-        System.out.println("5. Exit");
+        System.out.println("2. Remove Service");
+        System.out.println("3. Log Service Session");
+        System.out.println("4. Unlog a Session");
+        System.out.println("5. Generate Report");
+        System.out.println("6. List Services");
+        System.out.println("7. Exit");
         System.out.print("Please select an option by its number: ");
     }
 
@@ -120,7 +122,54 @@ public class Application
 
     private void removeService()
     {
-        // TODO: write method to remove service
+        if (services.isEmpty())
+        {
+            System.out.println("\nNo services added");
+            System.out.println("Select option 'Add Service' to add a service");
+            return;
+        }
+        listServices();
+
+        boolean valid = false;
+        int userChoice = -1;
+
+        while (!valid)
+        {
+            System.out.println(
+                    "\n[WARNING] Removing a service will permanently delete its logs as well. This cannot be undone.");
+            System.out.print("\nEnter the number of the service you want to remove or 0 to cancel: ");
+
+            try
+            {
+                userChoice = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e)
+            {
+                System.out.println("Invalid input. Please enter a whole number.");
+            }
+
+            if (userChoice >= 1 && userChoice <= services.size())
+            {
+                valid = true;
+            } else if (userChoice == 0)
+            {
+                System.out.println("Service removal canceled.");
+                return;
+            }
+
+            // confirmation
+            StreamingService service = services.get(userChoice - 1);
+            String serviceName = service.getName();
+            System.out.println("confirm you want to remove " + serviceName
+                    + " by typing the name of the service. (Case Sensitive)");
+            String userConfirmation = scanner.nextLine().trim();
+            if (!serviceName.equals(userConfirmation))
+            {
+                valid = false;
+                System.out.println("\nNames did not match.");
+            }
+        }
+
+        services.remove(userChoice - 1);
     }
 
     private void logSession()
@@ -143,7 +192,7 @@ public class Application
                 userChoice = Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e)
             {
-                System.out.println("Invalid input. Please enter a valid number (e.g., 12.99)");
+                System.out.println("Invalid input. Please enter a valid whole number.");
             }
 
             if (userChoice >= 1 && userChoice <= services.size())
@@ -198,6 +247,7 @@ public class Application
     private void unlogSession()
     {
         // TODO: write a way to remove logged session
+
     }
 
     private void generateReport()
