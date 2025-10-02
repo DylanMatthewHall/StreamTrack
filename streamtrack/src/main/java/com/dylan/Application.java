@@ -82,21 +82,27 @@ public class Application
     // user actions
     private void addService()
     {
-        String serviceName = "";
-        while (true)
+        String serviceName = null;
+        while (serviceName == null)
         {
-            System.out.print("\nType the Name of the Service Please: ");
-            serviceName = scanner.nextLine().trim();
+            System.out.print("\nType the Name of the Service (or press Enter to cancel): ");
+            String input = scanner.nextLine().trim();
 
-            if (serviceName.isEmpty())
+            try
             {
-                System.out.println("Service Name cannot be empty.");
-            } else if (serviceExists(serviceName))
+                if (input.isEmpty())
+                {
+                    System.out.println("Add service canceled.");
+                    return; // cancel
+                }
+                if (serviceExists(input))
+                {
+                    throw new IllegalArgumentException("Service name already exists.");
+                }
+                serviceName = input; // valid
+            } catch (IllegalArgumentException e)
             {
-                System.out.println("Service Name already exists. Please use a different name.");
-            } else
-            {
-                break;
+                System.out.println(e.getMessage());
             }
         }
 
@@ -122,99 +128,23 @@ public class Application
 
     private void removeService()
     {
-        if (services.isEmpty())
-        {
-            System.out.println("\nNo services added");
-            System.out.println("Select option 'Add Service' to add a service");
-            return;
-        }
-        listServices();
+        String promptMessage = "Select a service to remove: ";
+        boolean allowCancel = true;
+        StreamingService service = selectService(promptMessage, allowCancel);
 
-        boolean valid = false;
-        int userChoice = -1;
-
-        while (!valid)
-        {
-            System.out.println(
-                    "\n[WARNING] Removing a service will permanently delete its logs as well. This cannot be undone.");
-            System.out.print("\nEnter the number of the service you want to remove or 0 to cancel: ");
-
-            try
-            {
-                userChoice = Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e)
-            {
-                System.out.println("Invalid input. Please enter a whole number.");
-            }
-
-            if (userChoice >= 1 && userChoice <= services.size())
-            {
-                valid = true;
-            } else if (userChoice == 0)
-            {
-                System.out.println("Service removal canceled.");
-                return;
-            }
-
-            StreamingService service = null;
-            try
-            {
-                service = services.get(userChoice - 1);
-            } catch (IndexOutOfBoundsException e)
-            {
-                System.out.println("Invalid choice. Please pick a number between 1 and " + services.size());
-            }
-            // confirmation
-
-            String serviceName = service.getName();
-            System.out.println("confirm you want to remove " + serviceName
-                    + " by typing the name of the service. (Case Sensitive)");
-            String userConfirmation = scanner.nextLine().trim();
-            if (!serviceName.equals(userConfirmation))
-            {
-                valid = false;
-                System.out.println("\nNames did not match.");
-            }
-        }
-
-        services.remove(userChoice - 1);
+        services.remove(service);
     }
 
     private void logSession()
     {
-        // List Services
-        listServices();
-        if (services.isEmpty())
-        {
-            return;
-        }
-
-        boolean valid = false;
-        int userChoice = -1;
-        while (!valid)
-        {
-            System.out.print("\nSelect a serice by its number: ");
-
-            try
-            {
-                userChoice = Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e)
-            {
-                System.out.println("Invalid input. Please enter a valid whole number.");
-            }
-
-            if (userChoice >= 1 && userChoice <= services.size())
-            {
-                valid = true;
-            }
-        }
-
         // Select Service
-        StreamingService selectedService = services.get(userChoice - 1);
+        String promptMessage = "Select a service to log a session to.";
+        boolean allowCancel = true;
+        StreamingService service = selectService(promptMessage, allowCancel);
 
         // Get Date
         LocalDate date = null;
-        valid = false;
+        boolean valid = false;
         while (!valid)
         {
             System.out.print("\nEnter the date (YYYY-MM-DD): ");
@@ -247,43 +177,19 @@ public class Application
 
         // Create the session with date and minutes
         ViewingSession session = new ViewingSession(date, minutes);
-        selectedService.addSession(session);
+        service.addSession(session);
 
-        System.out.println("\nLogged " + minutes + " minutes on " + date + " for " + selectedService.getName());
+        System.out.println("\nLogged " + minutes + " minutes on " + date + " for " + service.getName());
     }
 
     private void unlogSession()
     {
-        if (services.isEmpty())
-        {
-            System.out.println("\nNo services added");
-            System.out.println("Select option 'Add Service' to add a service");
-            return;
-        }
-
-        listServices();
-
-        StreamingService service = null;
-        while (service == null)
-        {
-            System.out.print("Enter the number of the service you want to remove a log session from: ");
-            String input = scanner.nextLine().trim();
-
-            try
-            {
-                int userChoice = Integer.parseInt(input);
-                service = services.get(userChoice - 1); // valid choice
-            } catch (NumberFormatException e)
-            {
-                System.out.println("Invalid input. Please enter a whole number.");
-            } catch (IndexOutOfBoundsException e)
-            {
-                System.out.println("Invalid choice. Please pick a number between 1 and " + services.size());
-            }
-        }
+        String promptMessage = "Select a service to remove a logged session from.";
+        boolean allowCancel = true;
+        StreamingService service = selectService(promptMessage, allowCancel);
 
         // delegate removal to service
-        service.unlogServiceSession(scanner);
+        service.removeSession(scanner);
     }
 
     private void generateReport()
@@ -339,5 +245,45 @@ public class Application
             }
         }
         return false;
+    }
+
+    private StreamingService selectService(String promptMessage, boolean allowCancel)
+    {
+        if (services.isEmpty())
+        {
+            System.out.println("\nNo services added");
+            System.out.println("Select option 'Add Service' to add a service");
+            return null;
+        }
+
+        listServices();
+
+        StreamingService service = null;
+
+        while (service == null)
+        {
+            System.out.print("\n" + promptMessage + (allowCancel ? " (0 to cancel): " : ": "));
+
+            String input = scanner.nextLine().trim();
+            try
+            {
+                int choice = Integer.parseInt(input);
+
+                if (allowCancel && choice == 0)
+                {
+                    System.out.println("Action canceled.");
+                    return null;
+                }
+
+                service = services.get(choice - 1);
+            } catch (NumberFormatException e)
+            {
+                System.out.println("Invalid input. Please enter a whole number.");
+            } catch (IndexOutOfBoundsException e)
+            {
+                System.out.println("Invalid choice. Please pick a number between 1 and " + services.size());
+            }
+        }
+        return service;
     }
 }

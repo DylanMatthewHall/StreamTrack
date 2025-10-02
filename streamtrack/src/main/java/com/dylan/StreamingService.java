@@ -54,7 +54,7 @@ public class StreamingService implements Comparable<StreamingService>
         return this.monthlyCost;
     }
 
-    public void unlogServiceSession(Scanner scanner)
+    public void removeSession(Scanner scanner)
     {
         if (sessions.isEmpty())
         {
@@ -63,12 +63,6 @@ public class StreamingService implements Comparable<StreamingService>
         }
 
         listSessions();
-
-        for (int i = 0; i < sessions.size(); i++)
-        {
-            ViewingSession s = sessions.get(i);
-            System.out.println((i + 1) + ". " + s.getDate() + " - " + s.getDurationMinutes() + " minutes");
-        }
 
         System.out.print("Select a session to remove: ");
         try
