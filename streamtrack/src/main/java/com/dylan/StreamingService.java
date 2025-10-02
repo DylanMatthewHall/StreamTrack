@@ -2,6 +2,7 @@ package com.dylan;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class StreamingService implements Comparable<StreamingService>
 {
@@ -51,6 +52,49 @@ public class StreamingService implements Comparable<StreamingService>
     public double getMonthlyCost()
     {
         return this.monthlyCost;
+    }
+
+    public void unlogServiceSession(Scanner scanner)
+    {
+        if (sessions.isEmpty())
+        {
+            System.out.println("No sessions logged for " + name);
+            return;
+        }
+
+        listSessions();
+
+        for (int i = 0; i < sessions.size(); i++)
+        {
+            ViewingSession s = sessions.get(i);
+            System.out.println((i + 1) + ". " + s.getDate() + " - " + s.getDurationMinutes() + " minutes");
+        }
+
+        System.out.print("Select a session to remove: ");
+        try
+        {
+            int choice = Integer.parseInt(scanner.nextLine().trim());
+            ViewingSession removed = sessions.remove(choice - 1);
+            System.out.println("Removed: " + removed.getDate() + " - " + removed.getDurationMinutes() + " minutes");
+        } catch (Exception e)
+        {
+            System.out.println("Invalid choice. No session removed.");
+        }
+    }
+
+    private void listSessions()
+    {
+        if (sessions.isEmpty())
+        {
+            System.out.println("No logged sessions.");
+            return;
+        }
+        int num = 1;
+        for (ViewingSession session : sessions)
+        {
+            System.out.println(num + ". " + session.toString());
+            num++;
+        }
     }
 
     @Override

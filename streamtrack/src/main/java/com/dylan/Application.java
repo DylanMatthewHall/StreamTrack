@@ -156,8 +156,16 @@ public class Application
                 return;
             }
 
+            StreamingService service = null;
+            try
+            {
+                service = services.get(userChoice - 1);
+            } catch (IndexOutOfBoundsException e)
+            {
+                System.out.println("Invalid choice. Please pick a number between 1 and " + services.size());
+            }
             // confirmation
-            StreamingService service = services.get(userChoice - 1);
+
             String serviceName = service.getName();
             System.out.println("confirm you want to remove " + serviceName
                     + " by typing the name of the service. (Case Sensitive)");
@@ -246,8 +254,36 @@ public class Application
 
     private void unlogSession()
     {
-        // TODO: write a way to remove logged session
+        if (services.isEmpty())
+        {
+            System.out.println("\nNo services added");
+            System.out.println("Select option 'Add Service' to add a service");
+            return;
+        }
 
+        listServices();
+
+        StreamingService service = null;
+        while (service == null)
+        {
+            System.out.print("Enter the number of the service you want to remove a log session from: ");
+            String input = scanner.nextLine().trim();
+
+            try
+            {
+                int userChoice = Integer.parseInt(input);
+                service = services.get(userChoice - 1); // valid choice
+            } catch (NumberFormatException e)
+            {
+                System.out.println("Invalid input. Please enter a whole number.");
+            } catch (IndexOutOfBoundsException e)
+            {
+                System.out.println("Invalid choice. Please pick a number between 1 and " + services.size());
+            }
+        }
+
+        // delegate removal to service
+        service.unlogServiceSession(scanner);
     }
 
     private void generateReport()
