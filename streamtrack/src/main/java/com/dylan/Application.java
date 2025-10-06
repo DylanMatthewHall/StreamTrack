@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 public class Application
 {
-
     private List<StreamingService> services;
     private Scanner scanner;
 
@@ -22,11 +21,10 @@ public class Application
     // Core Methods
     public static void main(String[] args)
     {
+        DatabaseHelper.initializeDatabase();
         welcomeBanner();
         Application app = new Application();
         app.run();
-
-        // Exit Message
         System.out.println("Thankyou for using my application, Goodbye.");
     }
 
@@ -79,7 +77,8 @@ public class Application
         return userInput;
     }
 
-    // user actions
+    // TODO: Refactor to seperate add service name and service rate. Function does
+    // too many things
     public void addService()
     {
         String serviceName = null;
@@ -135,6 +134,7 @@ public class Application
         this.services.remove(service);
     }
 
+    // TODO: refactor method does too many things
     public void logSession()
     {
         // Select Service
