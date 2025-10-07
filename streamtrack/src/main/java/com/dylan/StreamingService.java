@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class StreamingService implements Comparable<StreamingService>
+public class StreamingService
 {
     private String name;
     private double monthlyCost;
@@ -123,10 +123,11 @@ public class StreamingService implements Comparable<StreamingService>
     {
         return name + " ($" + monthlyCost + "/month, " + String.format("%.2f", getTotalHours()) + " hrs watched)";
     }
-
+/* 
     @Override
     public int compareTo(StreamingService other)
     {
         return Double.compare(this.getCostPerHour(), other.getCostPerHour());
     }
+        */
 }
