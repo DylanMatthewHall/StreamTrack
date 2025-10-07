@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class StreamingService
+public class StreamingService implements Comparable<StreamingService>
 {
+    private int id;
     private String name;
     private double monthlyCost;
     private List<ViewingSession> sessions;
@@ -18,10 +19,48 @@ public class StreamingService
         this.sessions = new ArrayList<>();
     }
 
+    public StreamingService(int id, String name, double monthlyCost)
+    {
+        this.id = id;
+        this.name = name;
+        this.monthlyCost = monthlyCost;
+        this.sessions = new ArrayList<>();
+    }
+
     // Methods
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+
     public String getName()
     {
         return this.name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public double getMonthlyCost()
+    {
+        return this.monthlyCost;
+    }
+
+    public void setMonthlyCost(double monthlyCost)
+    {
+        this.monthlyCost = monthlyCost;
+    }
+
+    public List<ViewingSession> getSessions()
+    {
+        return sessions;
     }
 
     public double getTotalHours()
@@ -47,11 +86,6 @@ public class StreamingService
     public void addSession(ViewingSession session)
     {
         this.sessions.add(session);
-    }
-
-    public double getMonthlyCost()
-    {
-        return this.monthlyCost;
     }
 
     public void removeSession(Scanner scanner)
@@ -123,11 +157,10 @@ public class StreamingService
     {
         return name + " ($" + monthlyCost + "/month, " + String.format("%.2f", getTotalHours()) + " hrs watched)";
     }
-/* 
+
     @Override
     public int compareTo(StreamingService other)
     {
         return Double.compare(this.getCostPerHour(), other.getCostPerHour());
     }
-        */
 }

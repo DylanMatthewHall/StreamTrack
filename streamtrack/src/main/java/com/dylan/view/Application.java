@@ -3,40 +3,38 @@ package com.dylan.view;
 import com.dylan.controller.ServiceController;
 import com.dylan.dao.SQLiteStreamingServiceDAO;
 import com.dylan.dao.SQLiteViewingSessionDAO;
+import com.dylan.util.DatabaseInitiliazer;
 
 import java.util.Scanner;
 
-public class Application 
+public class Application
 {
     private Scanner scanner;
     private ServiceController controller;
 
-    public Application() 
+    public Application()
     {
         this.scanner = new Scanner(System.in);
-
-        // Wire dependencies here
-        this.controller = new ServiceController
-        (
-            new SQLiteStreamingServiceDAO(),
-            new SQLiteViewingSessionDAO()
-        );
+        DatabaseInitiliazer.intialize("jdbc:sqlite:streamtrack.db");
+        this.controller = new ServiceController(new SQLiteStreamingServiceDAO(), new SQLiteViewingSessionDAO());
     }
 
-    public static void main(String[] args) 
+    public static void main(String[] args)
     {
         Application app = new Application();
         app.run();
     }
 
-    public void run() 
+    public void run()
     {
         boolean running = true;
-        while (running) {
+        welcomeBanner();
+        while (running)
+        {
             showMenu();
             int choice = handleInput();
 
-            switch (choice) 
+            switch (choice)
             {
                 case 1 -> addServiceUI();
                 case 2 -> removeServiceUI();
@@ -50,7 +48,7 @@ public class Application
         }
     }
 
-    private void showMenu() 
+    private void showMenu()
     {
         System.out.println("\n=== StreamTrack Menu ===");
         System.out.println("1. Add Service");
@@ -63,45 +61,124 @@ public class Application
         System.out.print("Please select an option: ");
     }
 
-    private int handleInput() 
+    private int handleInput()
     {
-        try 
+        try
         {
             return Integer.parseInt(scanner.nextLine().trim());
-        } catch (NumberFormatException e) 
+        } catch (NumberFormatException e)
         {
             return 0; // invalid input
         }
     }
 
     // --- UI Wrappers for controller calls ---
-    private void addServiceUI() 
+    private void addServiceUI()
     {
-        // TODO: collect input, call controller.addService()
+        String serviceName = promptForServiceName();
+        double serviceCost = promptForServiceCost(serviceName);
+        controller.addService(serviceName, serviceCost);
     }
 
-    private void removeServiceUI() 
+    private String promptForServiceName()
+    {
+        String serviceName = null;
+        do
+        {
+            System.out.println("Enter the name of the new service.");
+            serviceName = scanner.nextLine();
+        } while (!isValidServiceName(serviceName));
+        return serviceName;
+    }
+
+    private boolean isValidServiceName(String serviceName)
+    {
+        boolean isValid = true;
+        if (serviceName == null || serviceName.trim().isEmpty())
+        {
+            System.out.println("Service Name cannot be empty.");
+            isValid = false;
+        } else if (controller.serviceExists(serviceName))
+        {
+            System.out.println("Service Name cannot be a duplicate.");
+            isValid = false;
+        }
+        return isValid;
+    }
+
+    private double promptForServiceCost(String serviceName)
+    {
+        String serviceCostStr = null;
+        do
+        {
+            System.out.println("Enter the monthly cost of " + serviceName + ".");
+            serviceName = scanner.nextLine();
+        } while (!isValidServiceCost(serviceCostStr));
+        double serviceCost = Double.parseDouble(serviceCostStr);
+        return serviceCost;
+    }
+
+    private boolean isValidServiceCost(String serviceCost)
+    {
+        boolean isValid = true;
+        try
+        {
+            double cost = Double.parseDouble(serviceCost);
+            if (cost < 0)
+            {
+                System.out.println("Service Cost cannot be negative");
+                isValid = false;
+            }
+        } catch (NumberFormatException e)
+        {
+            System.out.println("Service Cost must be a valid number.");
+            isValid = false;
+        }
+        return isValid;
+    }
+
+    private void removeServiceUI()
     {
         // TODO: collect input, call controller.removeService()
+        // list services
+
+        // prompt user for service id
+        // validate
+
+        // remove service
     }
 
-    private void logSessionUI() 
+    private void logSessionUI()
     {
         // TODO: collect input, call controller.logSession()
     }
 
-    private void unlogSessionUI() 
+    private void unlogSessionUI()
     {
         // TODO: collect input, call controller.removeSession()
     }
 
-    private void listServicesUI() 
+    private void listServicesUI()
     {
         // TODO: call controller.listServices() and print
     }
 
-    private void generateReportUI() 
+    private void generateReportUI()
     {
         // TODO: call controller.generateReport()
+    }
+
+    private static void welcomeBanner()
+    {
+        String banner = """
+                      _____ _                         _______             _
+                     / ____| |                       |__   __|           | |
+                    | (___ | |_ _ __ ___  __ _ _ __ ___ | |_ __ __ _  ___| | __
+                     \\___ \\| __| '__/ _ \\/ _` | '_ ` _ \\| | '__/ _` |/ __| |/ /
+                     ____) | |_| | |  __/ (_| | | | | | | | | | (_| | (__|   <
+                    |_____/ \\__|_|  \\___|\\__,_|_| |_| |_|_|_|  \\__,_|\\___|_|\\_\\
+                """;
+
+        System.out.println(banner);
     }
 }

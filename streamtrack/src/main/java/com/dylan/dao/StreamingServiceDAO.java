@@ -17,5 +17,7 @@ public interface StreamingServiceDAO
     // Read
     StreamingService getServiceById(int id);
 
+    StreamingService getServiceByName(String name);
+
     List<StreamingService> getAllServices();
 }

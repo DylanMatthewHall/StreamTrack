@@ -8,54 +8,65 @@ import com.dylan.model.ViewingSession;
 import java.time.LocalDate;
 import java.util.List;
 
-public class ServiceController 
+public class ServiceController
 {
     private StreamingServiceDAO serviceDAO;
     private ViewingSessionDAO sessionDAO;
 
     // Constructor injection
-    public ServiceController(StreamingServiceDAO serviceDAO, ViewingSessionDAO sessionDAO) 
+    public ServiceController(StreamingServiceDAO serviceDAO, ViewingSessionDAO sessionDAO)
     {
         this.serviceDAO = serviceDAO;
         this.sessionDAO = sessionDAO;
     }
 
     // Service operations
-    public void addService(String name, double cost) 
+    public void addService(String name, double cost)
     {
         // TODO: create StreamingService, call DAO
     }
 
-    public void removeService(int id) 
+    public void removeService(int id)
     {
         // TODO: call DAO to delete service
     }
 
-    public List<StreamingService> listServices() 
+    public List<StreamingService> listServices()
     {
         // TODO: call DAO to return all services
         return null;
+
+    }
+
+    public boolean serviceExists(String serviceName)
+    {
+        return serviceDAO.getServiceByName(serviceName) != null;
+    }
+
+    public boolean serviceExists(int id)
+    {
+        return serviceDAO.getServiceById(id) != null;
     }
 
     // Session operations
-    public void logSession(int serviceId, LocalDate date, int minutes) 
+    public void logSession(int serviceId, LocalDate date, int minutes)
     {
         // TODO: create ViewingSession, call DAO
     }
 
-    public void removeSession(int sessionId) 
+    public void removeSession(int sessionId)
     {
         // TODO: call DAO to delete session
     }
 
-    public List<ViewingSession> getSessionsForService(int serviceId) 
+    public List<ViewingSession> getSessionsForService(int serviceId)
     {
         // TODO: call DAO to return all sessions for service
         return null;
     }
 
     // Reports
-    public void generateReport() 
+    public void generateReport()
     {
         // TODO: compute $/hr and total usage across services
     }

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 public class ViewingSession
 {
+    private int id;
+    private int serviceID;
     private LocalDate date;
     private int durationMinutes;
 
