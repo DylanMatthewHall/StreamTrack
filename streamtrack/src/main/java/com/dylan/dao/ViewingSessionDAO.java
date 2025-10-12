@@ -1,19 +1,17 @@
 package com.dylan.dao;
 
-import com.dylan.model.ViewingSession;
+import com.dylan.entity.ViewingSession;
 import java.util.List;
 
-public interface ViewingSessionDAO 
+public interface ViewingSessionDAO
 {
+    void insert(ViewingSession session);
 
-    // Create
-    void addSession(ViewingSession session);
+    void delete(ViewingSession session);
 
-    // Delete
-    void deleteSession(int id);
+    List<ViewingSession> getAll();
 
-    // Read
-    ViewingSession getSessionById(int id);
+    List<ViewingSession> getByServiceId(int serviceId);
 
-    List<ViewingSession> getSessionsByService(int serviceId);
+    ViewingSession findById(int id);
 }

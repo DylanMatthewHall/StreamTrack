@@ -1,171 +1,120 @@
 package com.dylan.view;
 
 import com.dylan.controller.ServiceController;
-import com.dylan.dao.SQLiteStreamingServiceDAO;
-import com.dylan.dao.SQLiteViewingSessionDAO;
-import com.dylan.util.DatabaseInitiliazer;
+import com.dylan.dao.*;
+import com.dylan.util.DatabaseInitializer;
+import com.dylan.entity.*;
 
+import java.sql.Connection;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
 public class Application
 {
-    private Scanner scanner;
-    private ServiceController controller;
+    private final Scanner scanner;
+    private final ServiceController controller;
 
-    public Application()
+    public Application(ServiceController controller)
     {
         this.scanner = new Scanner(System.in);
-        DatabaseInitiliazer.intialize("jdbc:sqlite:streamtrack.db");
-        this.controller = new ServiceController(new SQLiteStreamingServiceDAO(), new SQLiteViewingSessionDAO());
-    }
-
-    public static void main(String[] args)
-    {
-        Application app = new Application();
-        app.run();
+        this.controller = controller;
     }
 
     public void run()
     {
         boolean running = true;
-        welcomeBanner();
         while (running)
         {
-            showMenu();
-            int choice = handleInput();
+            System.out.println("\n--- StreamTrack Menu ---");
+            System.out.println("1. Add Streaming Service");
+            System.out.println("2. List Services");
+            System.out.println("3. Remove Service");
+            System.out.println("4. Add Viewing Session");
+            System.out.println("5. List Sessions");
+            System.out.println("6. Remove Session");
+            System.out.println("7. Calculate Cost Per Hour");
+            System.out.println("8. Exit");
+            System.out.print("Choose an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // consume newline
 
             switch (choice)
             {
                 case 1 -> addServiceUI();
-                case 2 -> removeServiceUI();
-                case 3 -> logSessionUI();
-                case 4 -> unlogSessionUI();
-                case 5 -> generateReportUI();
-                case 6 -> listServicesUI();
-                case 7 -> running = false;
+                case 2 -> listServicesUI();
+                case 3 -> removeServiceUI();
+                case 4 -> addSessionUI();
+                case 5 -> listSessionsUI();
+                case 6 -> removeSessionUI();
+                case 7 -> costPerHourUI();
+                case 8 -> running = false;
                 default -> System.out.println("Invalid option.");
             }
         }
     }
 
-    private void showMenu()
-    {
-        System.out.println("\n=== StreamTrack Menu ===");
-        System.out.println("1. Add Service");
-        System.out.println("2. Remove Service");
-        System.out.println("3. Log Service Session");
-        System.out.println("4. Unlog a Session");
-        System.out.println("5. Generate Report");
-        System.out.println("6. List Services");
-        System.out.println("7. Exit");
-        System.out.print("Please select an option: ");
-    }
-
-    private int handleInput()
-    {
-        try
-        {
-            return Integer.parseInt(scanner.nextLine().trim());
-        } catch (NumberFormatException e)
-        {
-            return 0; // invalid input
-        }
-    }
-
-    // --- UI Wrappers for controller calls ---
+    // UI Methods
     private void addServiceUI()
     {
-        String serviceName = promptForServiceName();
-        double serviceCost = promptForServiceCost(serviceName);
-        controller.addService(serviceName, serviceCost);
-    }
-
-    private String promptForServiceName()
-    {
-        String serviceName = null;
-        do
-        {
-            System.out.println("Enter the name of the new service.");
-            serviceName = scanner.nextLine();
-        } while (!isValidServiceName(serviceName));
-        return serviceName;
-    }
-
-    private boolean isValidServiceName(String serviceName)
-    {
-        boolean isValid = true;
-        if (serviceName == null || serviceName.trim().isEmpty())
-        {
-            System.out.println("Service Name cannot be empty.");
-            isValid = false;
-        } else if (controller.serviceExists(serviceName))
-        {
-            System.out.println("Service Name cannot be a duplicate.");
-            isValid = false;
-        }
-        return isValid;
-    }
-
-    private double promptForServiceCost(String serviceName)
-    {
-        String serviceCostStr = null;
-        do
-        {
-            System.out.println("Enter the monthly cost of " + serviceName + ".");
-            serviceName = scanner.nextLine();
-        } while (!isValidServiceCost(serviceCostStr));
-        double serviceCost = Double.parseDouble(serviceCostStr);
-        return serviceCost;
-    }
-
-    private boolean isValidServiceCost(String serviceCost)
-    {
-        boolean isValid = true;
-        try
-        {
-            double cost = Double.parseDouble(serviceCost);
-            if (cost < 0)
-            {
-                System.out.println("Service Cost cannot be negative");
-                isValid = false;
-            }
-        } catch (NumberFormatException e)
-        {
-            System.out.println("Service Cost must be a valid number.");
-            isValid = false;
-        }
-        return isValid;
-    }
-
-    private void removeServiceUI()
-    {
-        // TODO: collect input, call controller.removeService()
-        // list services
-
-        // prompt user for service id
-        // validate
-
-        // remove service
-    }
-
-    private void logSessionUI()
-    {
-        // TODO: collect input, call controller.logSession()
-    }
-
-    private void unlogSessionUI()
-    {
-        // TODO: collect input, call controller.removeSession()
+        System.out.print("Enter service name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter monthly cost: ");
+        double cost = scanner.nextDouble();
+        controller.addService(name, cost);
     }
 
     private void listServicesUI()
     {
-        // TODO: call controller.listServices() and print
+        List<StreamingService> services = controller.getAllServices();
+        services.forEach(System.out::println);
     }
 
-    private void generateReportUI()
+    private void removeServiceUI()
     {
-        // TODO: call controller.generateReport()
+        listServicesUI();
+        System.out.print("Enter service ID to remove: ");
+        int id = scanner.nextInt();
+        controller.removeService(id);
+    }
+
+    private void addSessionUI()
+    {
+        listServicesUI();
+        System.out.print("Enter service ID: ");
+        int serviceId = scanner.nextInt();
+        System.out.print("Enter minutes watched: ");
+        int minutes = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+        System.out.print("Enter date (YYYY-MM-DD): ");
+        String dateStr = scanner.nextLine();
+        LocalDate date = LocalDate.parse(dateStr);
+
+        controller.addSession(serviceId, minutes, date);
+    }
+
+    private void listSessionsUI()
+    {
+        List<ViewingSession> sessions = controller.getAllSessions();
+        sessions.forEach(System.out::println);
+    }
+
+    private void removeSessionUI()
+    {
+        listSessionsUI();
+        System.out.print("Enter session ID to remove: ");
+        int id = scanner.nextInt();
+        controller.removeSession(id);
+    }
+
+    private void costPerHourUI()
+    {
+        listServicesUI();
+        System.out.print("Enter service ID: ");
+        int id = scanner.nextInt();
+        double cost = controller.calculateCostPerHour(id);
+        System.out.printf("Cost per hour: $%.2f%n", cost);
     }
 
     private static void welcomeBanner()
@@ -180,5 +129,23 @@ public class Application
                 """;
 
         System.out.println(banner);
+    }
+
+    public static void main(String[] args)
+    {
+        welcomeBanner();
+        DatabaseInitializer.initializeDatabase();
+        try (Connection conn = DatabaseInitializer.getConnection())
+        {
+            StreamingServiceDAO serviceDAO = new SQLiteStreamingServiceDAO(conn);
+            ViewingSessionDAO sessionDAO = new SQLiteViewingSessionDAO(conn);
+            ServiceController controller = new ServiceController(serviceDAO, sessionDAO);
+
+            Application app = new Application(controller);
+            app.run();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

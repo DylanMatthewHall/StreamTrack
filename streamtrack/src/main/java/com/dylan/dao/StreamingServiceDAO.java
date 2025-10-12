@@ -1,23 +1,15 @@
 package com.dylan.dao;
 
-import com.dylan.model.StreamingService;
+import com.dylan.entity.StreamingService;
 import java.util.List;
 
 public interface StreamingServiceDAO
 {
-    // Create
-    void addService(StreamingService service);
+    void insert(StreamingService service);
 
-    // Update
-    void updateService(StreamingService service);
+    void delete(StreamingService service);
 
-    // Delete
-    void deleteService(int id);
+    List<StreamingService> getAll();
 
-    // Read
-    StreamingService getServiceById(int id);
-
-    StreamingService getServiceByName(String name);
-
-    List<StreamingService> getAllServices();
+    StreamingService findById(int id);
 }

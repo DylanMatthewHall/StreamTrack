@@ -1,9 +1,7 @@
 package com.dylan.controller;
 
-import com.dylan.dao.StreamingServiceDAO;
-import com.dylan.dao.ViewingSessionDAO;
-import com.dylan.model.StreamingService;
-import com.dylan.model.ViewingSession;
+import com.dylan.dao.*;
+import com.dylan.entity.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,61 +11,63 @@ public class ServiceController
     private StreamingServiceDAO serviceDAO;
     private ViewingSessionDAO sessionDAO;
 
-    // Constructor injection
+    // Controller
     public ServiceController(StreamingServiceDAO serviceDAO, ViewingSessionDAO sessionDAO)
     {
         this.serviceDAO = serviceDAO;
         this.sessionDAO = sessionDAO;
     }
 
-    // Service operations
+    // Service Methods
     public void addService(String name, double cost)
     {
-        // TODO: create StreamingService, call DAO
+        StreamingService service = new StreamingService(name, cost);
+        serviceDAO.insert(service);
+    }
+
+    public List<StreamingService> getAllServices()
+    {
+        return serviceDAO.getAll();
+    }
+
+    public StreamingService getServiceById(int id)
+    {
+        return serviceDAO.findById(id);
     }
 
     public void removeService(int id)
     {
-        // TODO: call DAO to delete service
+        StreamingService service = serviceDAO.findById(id);
+        serviceDAO.delete(service);
     }
 
-    public List<StreamingService> listServices()
+    // Session Methods
+    public void addSession(int serviceId, int minutes, LocalDate date)
     {
-        // TODO: call DAO to return all services
-        return null;
-
+        ViewingSession session = new ViewingSession(serviceId, minutes, date);
+        sessionDAO.insert(session);
     }
 
-    public boolean serviceExists(String serviceName)
+    public List<ViewingSession> getAllSessions()
     {
-        return serviceDAO.getServiceByName(serviceName) != null;
-    }
-
-    public boolean serviceExists(int id)
-    {
-        return serviceDAO.getServiceById(id) != null;
-    }
-
-    // Session operations
-    public void logSession(int serviceId, LocalDate date, int minutes)
-    {
-        // TODO: create ViewingSession, call DAO
-    }
-
-    public void removeSession(int sessionId)
-    {
-        // TODO: call DAO to delete session
+        return sessionDAO.getAll();
     }
 
     public List<ViewingSession> getSessionsForService(int serviceId)
     {
-        // TODO: call DAO to return all sessions for service
-        return null;
+        return sessionDAO.getByServiceId(serviceId);
     }
 
-    // Reports
-    public void generateReport()
+    public void removeSession(int id)
     {
-        // TODO: compute $/hr and total usage across services
+        ViewingSession session = sessionDAO.findById(id);
+        sessionDAO.delete(session);
+    }
+
+    // --- Business logic (future) ---
+    public double calculateCostPerHour(int serviceId)
+    {
+        // TODO: implement
+        return 0.0;
     }
 }
