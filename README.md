@@ -44,6 +44,9 @@ that helps users manage subscriptions and log viewing sessions. By combining sub
 
 ---
 
+## Images of StreamTrack
+![Alt text](assets/StreamTackStartMenu.png)
+
 ## Next Steps  
 
 - Expand input validation and error handling  
