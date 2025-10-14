@@ -67,7 +67,19 @@ public class ServiceController
     // --- Business logic (future) ---
     public double calculateCostPerHour(int serviceId)
     {
-        // TODO: implement
-        return 0.0;
+        StreamingService service = serviceDAO.findById(serviceId);
+        if (service == null)
+        {
+            System.out.println("No service found with ID: " + serviceId);
+            return 0.0;
+        }
+        List<ViewingSession> sessions = sessionDAO.getByServiceId(serviceId);
+        int totalMinutes = sessions.stream().mapToInt(ViewingSession::getMinutes).sum();
+        double totalHours = totalMinutes / 60.0;
+        if (totalHours == 0)
+        {
+            return 0.0;
+        }
+        return service.getCost() / totalHours;
     }
 }
