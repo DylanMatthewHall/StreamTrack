@@ -44,8 +44,15 @@ that helps users manage subscriptions and log viewing sessions. By combining sub
 
 ---
 
-## Images of StreamTrack
-![Alt text](assets/StreamTackStartMenu.png)
+## Images of StreamTrack:
+
+### Start Menu
+![Start Menu Image](streamtrack/assets/StreamTrackStartMenu.png)
+
+### Listing Services:
+![List Services Image](streamtrack/assets/StreamTrackListServices.png)
+
+---
 
 ## Next Steps  
 
