@@ -1,30 +1,57 @@
 # StreamTrack  
 
-## About and Goal  
+## About  
 
-**Problem:** With multiple streaming and subscription services, it is difficult for users to track actual usage and determine the true value of their memberships.  
+With so many streaming and subscription services, it’s difficult to track actual usage and determine the true value of memberships. **StreamTrack** is a **Java console application** 
+that helps users manage subscriptions and log viewing sessions. By combining subscription cost with usage data, the app calculates a clear **cost-per-hour analysis**, helping users make informed decisions about which services are worth keeping.  
 
-**Audience:** Any individual who subscribes to paid memberships for streaming platforms (e.g., Netflix, Twitch, YouTube Premium) or gaming services (e.g., War Thunder Premium, Wizard101, World of Warcraft).  
+**Audience:** Individuals who subscribe to streaming platforms (Netflix, Twitch, YouTube Premium) or gaming services (World of Warcraft, Xbox Game Pass, Wizard101, etc.).  
 
-**Statement:** StreamTrack helps users by collecting subscription costs and logged usage time to generate a clear *cost-per-hour analysis*. This enables users to make informed decisions about whether each service is worth keeping.  
+**Goal:** Provide a simple, transparent way to evaluate subscription value through clear reporting and recommendations.  
 
-**Goal:** Provide users with a simple, transparent way to evaluate the value of their subscriptions through clear reporting and recommendations.  
+---
 
+## Features  
 
-## Requirements MVP
+- Add, view, update, and remove streaming services  
+- Add, view, update, and remove viewing sessions  
+- Persistent storage through **SQLite** so data is saved even after the app is closed  
+- Generate reports showing each service’s:  
+  - Name and monthly cost  
+  - Total hours watched  
+  - Cost per hour  
+  - Sorted from best value to worst  
+- Handle edge cases such as zero usage (displayed as **N/A**)  
 
-**Functional Requirements:** 
-1. The system must allow user to **add a service** with a monthly cost.
-2. The system must allow user to **log a usage session** for a service. (service, duration, date)
-3. The system must **calculate total hours watched** per service.
-4. The system must **calculate cost per hour** = (month cost) / (total hours watched).
-5. The system must **output a report** of all services.
-    - 5.1 The report must show each services name, monthly cost, total hours watched, and cost per hour.
-    - 5.2 The report must display the services sorted from best cost per hour to worst.
-    - 5.3 The report must handle cases where no hours are logged as N/A.
+---
 
-**Non Functional Requirements**
-1. **Usuability:** Provide a simple text menu for adding services, logging sessions, and generating reports
-2. **Accuracy:** Handle edge cases such as zero hours watched as (N/A) and place these at top of list in an identifying manner.
+## Tech Stack  
 
+- **Language:** Java  
+- **Database:** SQLite  
+- **Architecture:** MVC + DAO design pattern  
+- **Tools:** Git/GitHub for version control  
 
+---
+
+## Skills Strengthened  
+
+- Object-Oriented Programming (OOP) in Java  
+- Database integration and SQL queries  
+- Software architecture with MVC + DAO  
+- Clean code practices and input validation  
+- Git branching, merging, and version control workflow  
+
+---
+
+## Next Steps  
+
+- Expand input validation and error handling  
+- Convert StreamTrack into a **full-stack web application** (frontend + backend API)  
+- Add **data visualization** (graphs/charts) to show subscription value over time  
+- Extend reporting with more advanced insights (monthly usage trends, per-session breakdowns)  
+
+---
+
+👉 Check out the repository and code here:  
+[StreamTrack on GitHub](https://github.com/DylanMatthewHall/StreamTrack)  
